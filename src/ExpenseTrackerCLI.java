@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class ExpenseTrackerCLI {
     public static void main(String[] args) {
         ExpenseManager manager = new ExpenseManager();
@@ -16,9 +18,10 @@ public class ExpenseTrackerCLI {
             case "update":
                 break;
             case "delete":
+                handleDeleteCommand(manager, args);
                 break;
             case "list":
-                handleListCommand(manager)ç
+                handleListCommand(manager);
                 break;
             case "summary":
                 break;
@@ -69,6 +72,50 @@ public class ExpenseTrackerCLI {
     }
 
     private static void handleListCommand(ExpenseManager manager) {
-        
+        List<Expense> expenses = manager.getExpenses();
+
+        System.out.println("Expenses in CURRENT session: " + expenses.size() + " items");
+        System.out.println("ID  Date       Description  Amount");
+        System.out.println("-----------------------------------");
+
+        for (Expense expense : expenses) {
+            System.out.printf("%-3d %-10s %-12s $%.2f%n",
+                    expense.getId(),
+                    expense.getDate(),
+                    expense.getDescription(),
+                    expense.getAmount());
+        }
+
+        if (expenses.isEmpty()) {
+            System.out.println("(List is empty - each command starts fresh)");
+        }
+    }
+
+
+    private static void handleDeleteCommand(ExpenseManager manager, String[] args) {
+        Long id = null;
+
+        for(int i = 1; i < args.length; i++) {
+            if(args[i].equals("--id") && i + 1 < args.length) {
+                try{
+                    id = Long.parseLong(args[++i]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: id must be a valid number");
+                    return;
+                }
+            }
+        }
+
+        if (id == null) {
+            System.out.println("Error: Missing --id argument. Use: delete --id 1");
+            return;
+        }
+
+        boolean deleted = manager.deleteExpense(id);
+        if(deleted) {
+            System.out.println("Expense deleted");
+        } else {
+            System.out.println("Error: Expense with ID " + id + " not found");
+        }
     }
 }
