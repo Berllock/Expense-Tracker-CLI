@@ -16,6 +16,7 @@ public class ExpenseTrackerCLI {
                 handleAddCommand(manager, args);
                 break;
             case "update":
+                handleUpdateCommand(manager, args);
                 break;
             case "delete":
                 handleDeleteCommand(manager, args);
@@ -114,6 +115,54 @@ public class ExpenseTrackerCLI {
         boolean deleted = manager.deleteExpense(id);
         if(deleted) {
             System.out.println("Expense deleted");
+        } else {
+            System.out.println("Error: Expense with ID " + id + " not found");
+        }
+    }
+
+    private static void handleUpdateCommand(ExpenseManager manager, String[] args) {
+        Long id = null;
+        String newDescription = null;
+        Double newAmount = null;
+
+        for(int i = 1; i < args.length; i++) {
+            switch (args[i]) {
+                case "--id":
+                    if(i + 1 < args.length) {
+                        try {
+                            id = Long.parseLong(args[++i]);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error: id must be a valid number");
+                        }
+                    }
+                    break;
+
+                case "--description":
+                    if(i + 1 < args.length) {
+                        newDescription = args[++i];
+                    }
+                    break;
+
+                case "--amount":
+                    if(i + 1 < args.length) {
+                        try {
+                            newAmount = Double.parseDouble(args[++i]);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error: amount must be a valid number");
+                            return;
+                        }
+                    }
+                    break;
+            }
+        }
+        if (id == null) {
+            System.out.println("Error: Missing --id argument. Use: update --id 1");
+            return;
+        }
+
+        boolean updated = manager.updateExpense(id, newDescription, newAmount);
+        if(updated) {
+            System.out.println("Expense updated");
         } else {
             System.out.println("Error: Expense with ID " + id + " not found");
         }
