@@ -25,6 +25,7 @@ public class ExpenseTrackerCLI {
                 handleListCommand(manager);
                 break;
             case "summary":
+                handleSummaryCommand(manager,args);
                 break;
             default:
                 System.out.println("Unknown command");
@@ -166,5 +167,48 @@ public class ExpenseTrackerCLI {
         } else {
             System.out.println("Error: Expense with ID " + id + " not found");
         }
+    }
+
+    private static void handleSummaryCommand(ExpenseManager manager, String[] args) {
+        Integer month = null;
+
+        for(int i = 1; i < args.length; i++) {
+            if(args[i].equals("--month") && i + 1 < args.length) {
+                try {
+                    month = Integer.parseInt(args[++i]);
+                    if (month < 1 || month > 12) {
+                        System.out.println("Error: Month must be a valid number");
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: month must be a valid number");
+                    return;
+                }
+            }
+        }
+
+        double total = 0.0;
+        int count = 0;
+
+        for (Expense expense : manager.getExpenses()) {
+            if (month == null || expense.getDate().getMonthValue() == month) {
+                total += expense.getAmount();
+                count++;
+            }
+        }
+
+        if (month == null) {
+            System.out.printf("Total expenses: $%.2f (%d expenses)%n", total, count);
+        } else  {
+            String monthName = getMonthName(month);
+            System.out.printf("Total expenses for %s: $%.2f (%d expenses)%n",
+                    monthName, total, count);
+        }
+    }
+
+    private static String getMonthName(int month) {
+        String[] months = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+        return months[month - 1];
     }
 }
