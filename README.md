@@ -186,10 +186,14 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 ## 👨‍💻 Autor
 
-Este projeto foi baseado no desafio https://roadmap.sh/projects/expense-tracker
+Este projeto foi baseado no desafio [Expense Tracker do roadmap.sh](https://roadmap.sh/projects/expense-tracker)
 
 Desenvolvido como projeto educativo para demonstrar:
 - Desenvolvimento de ferramentas CLI em Java
 - Princípios de design orientado a objetos
 - Boas práticas de validação e tratamento de erros
 - Estruturação de projetos Java simples
+
+## ✉️ Contato
+
+Breno Souza - [Linkedin](https://www.linkedin.com/in/breno-berllock/) - brenosouzaemp@gmail.com
